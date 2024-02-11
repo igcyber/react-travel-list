@@ -57,6 +57,7 @@ function PackingList() {
   );
 }
 
+//sub-child component of PackingList
 function Item({ item }) {
   return (
     <li>
