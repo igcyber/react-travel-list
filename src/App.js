@@ -25,11 +25,22 @@ function Logo() {
 
 //child component form
 function Form() {
+  function handleSubmit(e) {
+    e.preventDefault();
+  }
+
   return (
-    <div className="add-form">
+    <form className="add-form" onSubmit={handleSubmit}>
       <h3>Apa aja yang dibawa? 🤔</h3>
       <h3>Yuk Checklist Barang 😁📝</h3>
-    </div>
+      <select>
+        {Array.from({ length: 20 }, (_, i) => i + 1).map((num) => (
+          <option value={num}>{num}</option>
+        ))}
+      </select>
+      <input type="text" placeholder="Barang yang mau dibawa" />
+      <button>Bawa</button>
+    </form>
   );
 }
 
@@ -39,7 +50,7 @@ function PackingList() {
     <div className="list">
       <ul>
         {initialItems.map((item) => (
-          <Item item={item} />
+          <Item item={item} key={item.id} />
         ))}
       </ul>
     </div>
