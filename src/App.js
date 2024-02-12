@@ -1,20 +1,28 @@
 import { useState } from "react";
 
 //static items
-const initialItems = [
-  { id: 1, description: "Passports", quantity: 2, packed: false },
-  { id: 2, description: "Socks", quantity: 12, packed: true },
-  { id: 3, description: "Power Bank", quantity: 1, packed: true },
-];
+// const initialItems = [
+//   { id: 1, description: "Passports", quantity: 2, packed: false },
+//   { id: 2, description: "Socks", quantity: 12, packed: true },
+//   { id: 3, description: "Power Bank", quantity: 1, packed: true },
+// ];
 
 //parent component
 export default function App() {
+  //destructuring array for states
+  const [items, setItems] = useState([]);
+
+  //handle add items to the state
+  function handleAddItems(item) {
+    setItems((items) => [...items, item]);
+  }
+
   //render child components inside parent
   return (
     <div className="app">
       <Logo />
-      <Form />
-      <PackingList />
+      <Form onAddItems={handleAddItems} />
+      <PackingList items={items} />
       <Stats />
     </div>
   );
@@ -26,7 +34,7 @@ function Logo() {
 }
 
 //child component form
-function Form() {
+function Form({ onAddItems }) {
   //destructuring array for state
   const [description, setDescription] = useState("");
   const [quantity, setQuantity] = useState(1);
@@ -40,6 +48,10 @@ function Form() {
 
     const newItem = { description, quantity, packed: false, id: Date.now() };
     console.log(newItem); //testing new item data
+
+    //store new item in array from parent state
+    //called this function whenever form submitted
+    onAddItems(newItem);
 
     //return this state
     setDescription("");
@@ -70,11 +82,11 @@ function Form() {
 }
 
 //child component PackingList
-function PackingList() {
+function PackingList({ items }) {
   return (
     <div className="list">
       <ul>
-        {initialItems.map((item) => (
+        {items.map((item) => (
           <Item item={item} key={item.id} />
         ))}
       </ul>
