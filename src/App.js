@@ -35,7 +35,7 @@ export default function App() {
         onDeleteItem={handleDeleteItem}
         onUpdateItem={handleUpdateItem}
       />
-      <Stats />
+      <Stats items={items} />
     </div>
   );
 }
@@ -135,11 +135,26 @@ function Item({ item, onDeleteItem, onUpdateItem }) {
 }
 
 //child component Stats
-function Stats() {
+function Stats({ items }) {
+  // jika tidak ada item pada array
+  if (!items.length)
+    return (
+      <p className="stats">
+        <em>Mulai Tambahkan Barang Bawaan Anda 😎</em>
+      </p>
+    );
+
+  const numItems = items.length;
+  const numPacked = items.filter((item) => item.packed).length;
+  const percentage = Math.round((numPacked / numItems) * 100);
+
   return (
     <footer className="stats">
       <em>
-        💼 Kamu punya 0 barang di daftar, dan sudah packing 0 barang (0%){" "}
+        {percentage === 100
+          ? "Kamu Siap Berangkat 🛺🚕"
+          : `💼 Kamu punya ${numItems} barang di daftar, dan sudah packing ${numPacked}
+        barang (${percentage}%)`}
       </em>
     </footer>
   );
