@@ -1,12 +1,5 @@
 import { useState } from "react";
 
-//static items
-// const initialItems = [
-//   { id: 1, description: "Passports", quantity: 2, packed: false },
-//   { id: 2, description: "Socks", quantity: 12, packed: true },
-//   { id: 3, description: "Power Bank", quantity: 1, packed: true },
-// ];
-
 //parent component
 export default function App() {
   //destructuring array for states
@@ -23,12 +16,25 @@ export default function App() {
     setItems((items) => items.filter((item) => item.id !== id));
   }
 
+  //handle update items from the state
+  function handleUpdateItem(id) {
+    setItems((items) =>
+      items.map((item) =>
+        item.id === id ? { ...item, packed: !item.packed } : item
+      )
+    );
+  }
+
   //render child components inside parent
   return (
     <div className="app">
       <Logo />
       <Form onAddItems={handleAddItems} />
-      <PackingList items={items} onDeleteItem={handleDeleteItem} />
+      <PackingList
+        items={items}
+        onDeleteItem={handleDeleteItem}
+        onUpdateItem={handleUpdateItem}
+      />
       <Stats />
     </div>
   );
@@ -91,12 +97,17 @@ function Form({ onAddItems }) {
 }
 
 //child component PackingList
-function PackingList({ items, onDeleteItem }) {
+function PackingList({ items, onDeleteItem, onUpdateItem }) {
   return (
     <div className="list">
       <ul>
         {items.map((item) => (
-          <Item item={item} key={item.id} onDeleteItem={onDeleteItem} />
+          <Item
+            item={item}
+            key={item.id}
+            onDeleteItem={onDeleteItem}
+            onUpdateItem={onUpdateItem}
+          />
         ))}
       </ul>
     </div>
@@ -104,9 +115,14 @@ function PackingList({ items, onDeleteItem }) {
 }
 
 //sub-component PackingList
-function Item({ item, onDeleteItem }) {
+function Item({ item, onDeleteItem, onUpdateItem }) {
   return (
     <li>
+      <input
+        type="checkbox"
+        value={item.packed}
+        onChange={() => onUpdateItem(item.id)}
+      />
       {/* ternary operator to check simple condition */}
       {/* if item.packed === true then apply this style textDecoration: "line-through" 
       else don't do anything */}
