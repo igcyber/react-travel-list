@@ -17,12 +17,18 @@ export default function App() {
     setItems((items) => [...items, item]);
   }
 
+  //handle delete items from the state
+  function handleDeleteItem(id) {
+    // console.log(id);
+    setItems((items) => items.filter((item) => item.id !== id));
+  }
+
   //render child components inside parent
   return (
     <div className="app">
       <Logo />
       <Form onAddItems={handleAddItems} />
-      <PackingList items={items} />
+      <PackingList items={items} onDeleteItem={handleDeleteItem} />
       <Stats />
     </div>
   );
@@ -30,7 +36,11 @@ export default function App() {
 
 //child component logo
 function Logo() {
-  return <h1> 🧳 JALAN KUY ✈</h1>;
+  return (
+    <div>
+      <h1> 🧳 JALAN KUY ✈</h1>
+    </div>
+  );
 }
 
 //child component form
@@ -60,7 +70,6 @@ function Form({ onAddItems }) {
 
   return (
     <form className="add-form" onSubmit={handleSubmit}>
-      <h3>Apa aja yang dibawa? 🤔</h3>
       <h3>Yuk Checklist Barang 😁📝</h3>
       <select
         value={quantity}
@@ -82,12 +91,12 @@ function Form({ onAddItems }) {
 }
 
 //child component PackingList
-function PackingList({ items }) {
+function PackingList({ items, onDeleteItem }) {
   return (
     <div className="list">
       <ul>
         {items.map((item) => (
-          <Item item={item} key={item.id} />
+          <Item item={item} key={item.id} onDeleteItem={onDeleteItem} />
         ))}
       </ul>
     </div>
@@ -95,7 +104,7 @@ function PackingList({ items }) {
 }
 
 //sub-component PackingList
-function Item({ item }) {
+function Item({ item, onDeleteItem }) {
   return (
     <li>
       {/* ternary operator to check simple condition */}
@@ -104,7 +113,7 @@ function Item({ item }) {
       <span style={item.packed ? { textDecoration: "line-through" } : {}}>
         {item.quantity} {item.description}
       </span>
-      <button>❌</button>
+      <button onClick={() => onDeleteItem(item.id)}>❌</button>
     </li>
   );
 }
